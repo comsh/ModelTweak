@@ -247,6 +247,7 @@ namespace ModelTweak {
 
         private void lstMorph_SelectedIndexChanged(object sender,EventArgs e) {
             EnableInputs();
+            if(lstMorph.SelectedIndex==-1) return;
             string name=lstMorph.SelectedItem.ToString();  
             txtMorphNewName.Text=name;
             txtMorphLKey.Text=name+"_l";
@@ -254,6 +255,7 @@ namespace ModelTweak {
         }
         private void lstTex_SelectedIndexChanged(object sender,EventArgs e) {
             EnableInputs();
+            if(lstTex.SelectedIndex==-1) return;
             var tex=(ModelFile.PropTexture)lstTex.SelectedItem;
             txtTex.Text=tex.name;
             txtTexOffX.Text=tex.offsetX.ToString("G5");
