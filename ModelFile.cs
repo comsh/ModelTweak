@@ -10,11 +10,12 @@ public class ModelFile {
 
     public SMR smr;
     public class SMR {          // UnityのSkinnedMeshRendererに相当
-        public Transform[] bones;
+        public TrList bones;
         public Mesh mesh;
         public Material[] mate;
         public List<Morph> morph;   // いわゆる「シェイプキー」
     }
+    public ModelFile(string filename){ this.Read(filename); } // 例外拾ってね
 
     public int Read(string filename){
         var f=File.Open(filename,FileMode.Open);
@@ -54,9 +55,8 @@ public class ModelFile {
 
     public int ReadBones(BinaryReader br,SMR smr){
         int bn=br.ReadInt32();
-        var bones=smr.bones=new Transform[bn];
-        for(int i=0; i<bn; i++)
-            bones[i]=new Transform(br.ReadString(),br.ReadByte());
+        var bones=smr.bones=new TrList();
+        for(int i=0; i<bn; i++) bones.Add(new Transform(br.ReadString(),br.ReadByte()));
 
         for(int i=0; i<bn; i++){
             int p=br.ReadInt32();
@@ -78,22 +78,16 @@ public class ModelFile {
     }
 
     public void WriteBones(BinaryWriter bw,SMR smr){
-        Transform[] bones=smr.bones;
-        int bn=bones.Length;
+        var bones=smr.bones;
+        int bn=bones.Count;
         bw.Write(bn);
-        var dic=new Dictionary<string,int>();
         for(int i=0; i<bn; i++){
             bw.Write(bones[i].name);
             bw.Write(bones[i].hasScl);
-            dic.Add(bones[i].name,i);
         }
         for(int i=0; i<bn; i++){
-            if(bones[i].parent==null){
-                bw.Write((int)-1);
-            }else{
-                string pname=bones[i].parent.name;
-                bw.Write(dic[pname]);
-            }
+            if(bones[i].parent==null) bw.Write((int)-1);
+            else bw.Write(bones[i].parent.idx);
         }
         for(int i=0; i<bn; i++){
             bw.Write(bones[i].x); bw.Write(bones[i].y); bw.Write(bones[i].z);
@@ -134,9 +128,16 @@ public class ModelFile {
         }
         bw.Write("end");
     }
+    public class TrList:List<Transform> {
+        public new void Add(Transform tr){
+            tr.idx=this.Count;
+            base.Add(tr);
+        }
+    }
     public class Transform {
+        public int idx;
         public string name;
-        public byte hasScl;
+        public byte hasScl; // _SCL_が追加で作られる
         public Transform parent;
         public List<Transform> children;
         public float x; public float y; public float z;
@@ -147,13 +148,14 @@ public class ModelFile {
             this.name=name; this.hasScl=hasScl;
             children=new List<Transform>();
         }
+        public override string ToString(){ return name; }
     }
     public class Mesh {
-        public string[] bonelist;
+        public List<string> bonelist;
         public float[][] vertex;
         public float[][] normal;
         public float[][] uv;
-        public float[][] bindpose;
+        public List<float[]> bindpose;
         public BoneWeight[] weights;
         public float[][] tangents;
         public ushort[][] triangles;
@@ -162,18 +164,19 @@ public class ModelFile {
             int vertcount=br.ReadInt32();
             int submeshcount=br.ReadInt32();
             int bonecount=br.ReadInt32();
-            bonelist=new string[bonecount];
+            bonelist=new List<string>(bonecount);
             vertex=new float[vertcount][];
             normal=new float[vertcount][];
             uv=new float[vertcount][];
-            bindpose=new float[bonecount][];
+            bindpose=new List<float[]>(bonecount);
             weights=new BoneWeight[vertcount];
             triangles=new ushort[submeshcount][];
-    
-            for(int i=0; i<bonecount; i++) bonelist[i]=br.ReadString();
+
+            for(int i=0; i<bonecount; i++) bonelist.Add(br.ReadString());
             for(int i=0; i<bonecount; i++){
-                bindpose[i]=new float[16];
-                for(int j=0;j<16;j++) bindpose[i][j]=br.ReadSingle();
+                var matrix=new float[16];
+                for(int j=0;j<16;j++) matrix[j]=br.ReadSingle();
+                bindpose.Add(matrix);
             }
     
             for(int i=0; i<vertcount; i++){
@@ -202,7 +205,7 @@ public class ModelFile {
             }
         }
         public void Write(BinaryWriter bw){
-            int vn=vertex.Length, bn=bonelist.Length,sn=triangles.Length,i,j;
+            int vn=vertex.Length,bn=bonelist.Count,sn=triangles.Length,i,j;
             bw.Write(vn);
             bw.Write(sn);
             bw.Write(bn);
@@ -254,13 +257,12 @@ public class ModelFile {
                     var tf=br.ReadString();
                     if(tf=="null") {
                         var prop=new Prop(name,Prop.Type.Texture2);
-                        prop.texture2=new PropTexture2();
-                        prop.texture2.dummy1=null;
+                        prop.value=new PropTexture2(null,null);
                         props.Add(prop);
                     }else if(tf=="tex2d"){
                         var prop=new Prop(name,Prop.Type.Texture);
                         var tex=new PropTexture();
-                        prop.texture=tex;
+                        prop.value=tex;
                         tex.name=br.ReadString();
                         tex.dummy=br.ReadString(); // 使われてない
                         tex.offsetX=br.ReadSingle(); tex.offsetY=br.ReadSingle();
@@ -268,18 +270,16 @@ public class ModelFile {
                         props.Add(prop);
                     }else if(tf=="texRT"){ // 使われない。そのまま書き出すだけ
                         var prop=new Prop(name,Prop.Type.Texture2);
-                        prop.texture2=new PropTexture2();
-                        prop.texture2.dummy1=br.ReadString();
-                        prop.texture2.dummy2=br.ReadString();
+                        prop.value=new PropTexture2(br.ReadString(),br.ReadString());
                         props.Add(prop);
                     }
                 }else if(type=="col"){
                     var prop=new Prop(name,Prop.Type.Color);
-                    prop.color=new PropColor(br.ReadSingle(),br.ReadSingle(),br.ReadSingle(),br.ReadSingle());
+                    prop.value=new PropColor(br.ReadSingle(),br.ReadSingle(),br.ReadSingle(),br.ReadSingle());
                     props.Add(prop);
                 }else if(type=="vec"){
                     var prop=new Prop(name,Prop.Type.Vector);
-                    prop.vector=new PropVector(br.ReadSingle(),br.ReadSingle(),br.ReadSingle(),br.ReadSingle());
+                    prop.value=new PropVector(br.ReadSingle(),br.ReadSingle(),br.ReadSingle(),br.ReadSingle());
                     props.Add(prop);
                 }else if(type=="f"){
                     var prop=new Prop(name,Prop.Type.Value);
@@ -298,39 +298,43 @@ public class ModelFile {
                     bw.Write("tex");
                     bw.Write(prop.name);
                     bw.Write("tex2d");
-                    bw.Write(prop.texture.name);
-                    bw.Write(prop.texture.dummy);
-                    bw.Write(prop.texture.offsetX);
-                    bw.Write(prop.texture.offsetY);
-                    bw.Write(prop.texture.scaleX);
-                    bw.Write(prop.texture.scaleY);
+                    var tex=(PropTexture)prop.value;
+                    bw.Write(tex.name);
+                    bw.Write(tex.dummy);
+                    bw.Write(tex.offsetX);
+                    bw.Write(tex.offsetY);
+                    bw.Write(tex.scaleX);
+                    bw.Write(tex.scaleY);
                 } else if(prop.type==Prop.Type.Texture2){
                     bw.Write("tex");
                     bw.Write(prop.name);
-                    if(prop.texture2.dummy1==null) bw.Write("null");
+                    var tex2=(PropTexture2)prop.value;
+                    if(tex2.dummy1==null) bw.Write("null");
                     else{
                         bw.Write("texRT");
-                        bw.Write(prop.texture2.dummy1);
-                        bw.Write(prop.texture2.dummy2);
+                        bw.Write(tex2.dummy1);
+                        bw.Write(tex2.dummy2);
                     }
                 } else if(prop.type==Prop.Type.Color){
                     bw.Write("col");
                     bw.Write(prop.name);
-                    bw.Write(prop.color.r);
-                    bw.Write(prop.color.g);
-                    bw.Write(prop.color.b);
-                    bw.Write(prop.color.a);
+                    var col=(PropColor)prop.value;
+                    bw.Write(col.r);
+                    bw.Write(col.g);
+                    bw.Write(col.b);
+                    bw.Write(col.a);
                 } else if(prop.type==Prop.Type.Vector){
                     bw.Write("vec");
                     bw.Write(prop.name);
-                    bw.Write(prop.vector.x);
-                    bw.Write(prop.vector.y);
-                    bw.Write(prop.vector.z);
-                    bw.Write(prop.vector.w);
+                    var vec=(PropVector)prop.value;
+                    bw.Write(vec.x);
+                    bw.Write(vec.y);
+                    bw.Write(vec.z);
+                    bw.Write(vec.w);
                 } else if(prop.type==Prop.Type.Value){
                     bw.Write("f");
                     bw.Write(prop.name);
-                    bw.Write(prop.value);
+                    bw.Write((float)prop.value);
                 }
             }
             bw.Write("end");
@@ -339,15 +343,10 @@ public class ModelFile {
     public class Prop{
         public string name;
         public Type type;
-        public PropTexture texture;
-        public PropTexture2 texture2;
-        public PropColor color;
-        public PropVector vector;
-        public float value;
+        public object value;
         public Prop(string name,Type type){
             this.name=name; this.type=type;
         }
-
         public enum Type { Texture,Texture2,Color,Vector,Value };
     }
     public class PropColor{
@@ -380,6 +379,7 @@ public class ModelFile {
     public class PropTexture2 { // texRTまたはnullのとき用
         public string dummy1;
         public string dummy2;
+        public PropTexture2(string s1,string s2){dummy1=s1; dummy2=s2;}
     }
     public class BoneWeight {
         public ushort[] index;
