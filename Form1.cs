@@ -50,13 +50,9 @@ namespace ModelTweak {
             width(lstTex);
 
             lstBone.Items.Clear();
-            cmbBoneWeightMoveTarget.Items.Clear();
             foreach(var bone in model.smr.bones){
                 var item=new LVItem(bone.name,bone);
                 lstBone.Items.Add(item);
-
-                // ウェイト移動先コンボボックスにも項目(名前のみ)追加
-                cmbBoneWeightMoveTarget.Items.Add(bone.name);
 
                 if(AnyWeight(bone.name)){ // ウェイト持ちボーンを強調
                     item.Font=new Font(item.Font,FontStyle.Bold);
@@ -337,23 +333,6 @@ namespace ModelTweak {
                     MessageBox.Show("その名前は使われています", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
-            }else if(rdoBoneAddSibling.Checked){
-                if(txtBoneNewSibling.Text==""){
-                    MessageBox.Show("ボーン名が空です", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                if(!CheckBoneName(txtBoneNewSibling.Text)){
-                    MessageBox.Show("その名前は使われています", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-            } else if(rdoBoneDel.Checked && boneWCnt>0){
-                if(cmbBoneWeightMoveTarget.Text==""){
-                    MessageBox.Show("相続ボーン名が空です", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                } else if(CheckBoneName(cmbBoneWeightMoveTarget.Text)){
-                    MessageBox.Show("対象ボーンが存在しません", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
             }
             return true;
         }
@@ -364,12 +343,8 @@ namespace ModelTweak {
             if(rdoBoneAddChild.Checked){ // 子ボーン追加
                 model.AddBone(txtNewBone.Text,basebone.name);
                 weight(basebone.name,txtNewBone.Text);
-            }else if(rdoBoneAddSibling.Checked){ // 兄弟ボーン追加
-                string pname=(basebone.parent==null)?null:basebone.parent.name;
-                model.AddBone(txtBoneNewSibling.Text,pname,basebone);
-                weight(basebone.name,txtBoneNewSibling.Text);
             }else if(rdoBoneDel.Checked){ // ボーン削除
-                weight(basebone.name,cmbBoneWeightMoveTarget.Text);
+                if(basebone.parent!=null) weight(basebone.name,basebone.parent.name);
                 model.DelBone(basebone.name);
             }
             model.Write(ofile);
@@ -413,15 +388,12 @@ namespace ModelTweak {
             int n=lstBone.SelectedItems.Count;
             if(n==0){
                 btnBoneAdd.Enabled=chkBoneOW.Enabled=
-                rdoBoneAddChild.Enabled=rdoBoneAddSibling.Enabled=rdoBoneDel.Enabled=
-                txtNewBone.Enabled=txtBoneNewSibling.Enabled=cmbBoneWeightMoveTarget.Enabled=false;
-                txtBaseBone.Text=txtNewBone.Text=lblBoneSCL.Text=cmbBoneWeightMoveTarget.Text="";
+                rdoBoneAddChild.Enabled=rdoBoneDel.Enabled=txtNewBone.Enabled=false;
+                txtBaseBone.Text=txtNewBone.Text=lblBoneSCL.Text="";
             }else{
-                btnBoneAdd.Enabled=chkBoneOW.Enabled=rdoBoneAddChild.Enabled=rdoBoneAddSibling.Enabled=true;
+                btnBoneAdd.Enabled=chkBoneOW.Enabled=rdoBoneAddChild.Enabled=true;
                 rdoBoneDel.Enabled=(boneCCnt==0);
                 txtNewBone.Enabled=rdoBoneAddChild.Checked;
-                txtBoneNewSibling.Enabled=rdoBoneAddSibling.Checked;
-                cmbBoneWeightMoveTarget.Enabled=(rdoBoneDel.Enabled && rdoBoneDel.Checked);
             }
         }
 
@@ -442,17 +414,6 @@ namespace ModelTweak {
             txtBaseBone.Text=bone.name;
             txtNewBone.Text="";
             EnableInputsBone(null,null);
-
-            cmbBoneWeightMoveTarget.Items.Clear();
-            if(boneWCnt==0) return;
-            if(bone.parent!=null){ // 親あり→親か兄弟が相続候補　
-                cmbBoneWeightMoveTarget.Items.Add(bone.parent.name);
-                foreach(var b in bone.parent.children)
-                    if(b.name!=bone.name) cmbBoneWeightMoveTarget.Items.Add(b.name);
-            }else{  // 親なし→トップレベルのボーンが相続候補
-                foreach(var b in model.smr.bones)
-                    if(b.parent==null && b.name!=bone.name) cmbBoneWeightMoveTarget.Items.Add(b.name);
-            }
         }
 
 

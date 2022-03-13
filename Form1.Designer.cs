@@ -74,19 +74,13 @@
             this.lblBoneWeightCnt = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.txtBoneNewSibling = new System.Windows.Forms.TextBox();
             this.chkBoneOW = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.rdoBoneSortChild = new System.Windows.Forms.RadioButton();
             this.rdoBoneSortWeight = new System.Windows.Forms.RadioButton();
             this.rdoBoneSortNormal = new System.Windows.Forms.RadioButton();
             this.rdoBoneDel = new System.Windows.Forms.RadioButton();
-            this.label17 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.cmbBoneWeightMoveTarget = new System.Windows.Forms.ComboBox();
-            this.rdoBoneAddSibling = new System.Windows.Forms.RadioButton();
             this.rdoBoneAddChild = new System.Windows.Forms.RadioButton();
             this.lblBoneSCL = new System.Windows.Forms.Label();
             this.lstBone = new System.Windows.Forms.ListView();
@@ -95,6 +89,7 @@
             this.btnBoneAdd = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.txtNewBone = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -572,20 +567,15 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label17);
             this.tabPage3.Controls.Add(this.lblBoneChildCnt);
             this.tabPage3.Controls.Add(this.lblBoneWeightCnt);
             this.tabPage3.Controls.Add(this.label21);
             this.tabPage3.Controls.Add(this.label20);
-            this.tabPage3.Controls.Add(this.label19);
-            this.tabPage3.Controls.Add(this.label18);
-            this.tabPage3.Controls.Add(this.txtBoneNewSibling);
             this.tabPage3.Controls.Add(this.chkBoneOW);
             this.tabPage3.Controls.Add(this.panel2);
             this.tabPage3.Controls.Add(this.rdoBoneDel);
-            this.tabPage3.Controls.Add(this.label17);
             this.tabPage3.Controls.Add(this.label12);
-            this.tabPage3.Controls.Add(this.cmbBoneWeightMoveTarget);
-            this.tabPage3.Controls.Add(this.rdoBoneAddSibling);
             this.tabPage3.Controls.Add(this.rdoBoneAddChild);
             this.tabPage3.Controls.Add(this.lblBoneSCL);
             this.tabPage3.Controls.Add(this.lstBone);
@@ -636,31 +626,6 @@
             this.label20.Size = new System.Drawing.Size(58, 12);
             this.label20.TabIndex = 43;
             this.label20.Text = "子ボーン数";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(265, 269);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(41, 12);
-            this.label19.TabIndex = 42;
-            this.label19.Text = "相続先";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(261, 191);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(46, 12);
-            this.label18.TabIndex = 41;
-            this.label18.Text = "ボーン名";
-            // 
-            // txtBoneNewSibling
-            // 
-            this.txtBoneNewSibling.Location = new System.Drawing.Point(309, 188);
-            this.txtBoneNewSibling.Name = "txtBoneNewSibling";
-            this.txtBoneNewSibling.Size = new System.Drawing.Size(179, 19);
-            this.txtBoneNewSibling.TabIndex = 40;
             // 
             // chkBoneOW
             // 
@@ -722,7 +687,7 @@
             // rdoBoneDel
             // 
             this.rdoBoneDel.AutoSize = true;
-            this.rdoBoneDel.Location = new System.Drawing.Point(247, 235);
+            this.rdoBoneDel.Location = new System.Drawing.Point(247, 172);
             this.rdoBoneDel.Name = "rdoBoneDel";
             this.rdoBoneDel.Size = new System.Drawing.Size(198, 16);
             this.rdoBoneDel.TabIndex = 37;
@@ -730,15 +695,6 @@
             this.rdoBoneDel.Text = "ボーン削除(子のいないボーンのみ可)";
             this.rdoBoneDel.UseVisualStyleBackColor = true;
             this.rdoBoneDel.CheckedChanged += new System.EventHandler(this.EnableInputsBone);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(261, 256);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(38, 12);
-            this.label17.TabIndex = 34;
-            this.label17.Text = "ウェイト";
             // 
             // label12
             // 
@@ -748,26 +704,6 @@
             this.label12.Size = new System.Drawing.Size(46, 12);
             this.label12.TabIndex = 33;
             this.label12.Text = "ボーン名";
-            // 
-            // cmbBoneWeightMoveTarget
-            // 
-            this.cmbBoneWeightMoveTarget.FormattingEnabled = true;
-            this.cmbBoneWeightMoveTarget.Location = new System.Drawing.Point(309, 259);
-            this.cmbBoneWeightMoveTarget.Name = "cmbBoneWeightMoveTarget";
-            this.cmbBoneWeightMoveTarget.Size = new System.Drawing.Size(179, 20);
-            this.cmbBoneWeightMoveTarget.Sorted = true;
-            this.cmbBoneWeightMoveTarget.TabIndex = 32;
-            // 
-            // rdoBoneAddSibling
-            // 
-            this.rdoBoneAddSibling.AutoSize = true;
-            this.rdoBoneAddSibling.Location = new System.Drawing.Point(247, 166);
-            this.rdoBoneAddSibling.Name = "rdoBoneAddSibling";
-            this.rdoBoneAddSibling.Size = new System.Drawing.Size(220, 16);
-            this.rdoBoneAddSibling.TabIndex = 31;
-            this.rdoBoneAddSibling.Text = "兄弟ボーンを追加してウェイトをすべて渡す";
-            this.rdoBoneAddSibling.UseVisualStyleBackColor = true;
-            this.rdoBoneAddSibling.CheckedChanged += new System.EventHandler(this.EnableInputsBone);
             // 
             // rdoBoneAddChild
             // 
@@ -844,6 +780,15 @@
             this.txtNewBone.Name = "txtNewBone";
             this.txtNewBone.Size = new System.Drawing.Size(179, 19);
             this.txtNewBone.TabIndex = 25;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(267, 193);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(199, 12);
+            this.label17.TabIndex = 47;
+            this.label17.Text = "※(あれば)ウェイトはすべて親に渡されます";
             // 
             // Form1
             // 
@@ -931,10 +876,7 @@
         private System.Windows.Forms.RadioButton rdoMorphSortAsc;
         private System.Windows.Forms.Button btnMorphReverse;
         private System.Windows.Forms.Label lblBoneSCL;
-        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.ComboBox cmbBoneWeightMoveTarget;
-        private System.Windows.Forms.RadioButton rdoBoneAddSibling;
         private System.Windows.Forms.RadioButton rdoBoneAddChild;
         private System.Windows.Forms.RadioButton rdoBoneDel;
         private System.Windows.Forms.Panel panel2;
@@ -944,13 +886,11 @@
         private System.Windows.Forms.CheckBox chkMorphOW;
         private System.Windows.Forms.CheckBox chkTexOW;
         private System.Windows.Forms.CheckBox chkBoneOW;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.TextBox txtBoneNewSibling;
         private System.Windows.Forms.Label lblBoneChildCnt;
         private System.Windows.Forms.Label lblBoneWeightCnt;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label17;
     }
 }
 

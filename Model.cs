@@ -33,7 +33,7 @@ public class Model {
         if(boneDic.TryGetValue(name,out int bi)) return trList[bi];
         return null;
     }
-    public int AddBone(string name,string parent,ModelFile.Transform orig=null){
+    public int AddBone(string name,string parent){
         var tr=new ModelFile.Transform(name,0);
         if(parent!=null){
             var p=FindBone(parent);
@@ -41,15 +41,8 @@ public class Model {
             tr.parent=smr.bones[p.idx];
             tr.parent.children.Add(tr);
         }else tr.parent=null;
-        if(orig==null){
-            tr.x=tr.y=tr.z=0; tr.qx=tr.qy=tr.qz=0; tr.qw=1;
-            tr.hasScale=false;
-        }else{
-            tr.x=orig.x; tr.y=orig.y; tr.z=orig.z;
-            tr.qx=orig.qx; tr.qy=orig.qy; tr.qz=orig.qz; tr.qw=orig.qw;
-            tr.hasScale=orig.hasScale;
-            if(tr.hasScale){ tr.scalex=orig.scalex; tr.scaley=orig.scaley; tr.scalez=orig.scalez; }
-        }
+        tr.x=tr.y=tr.z=0; tr.qx=tr.qy=tr.qz=0; tr.qw=1;
+        tr.hasScale=false;
         model.smr.bones.Add(tr);
         MkBoneDic();
         return 0;
