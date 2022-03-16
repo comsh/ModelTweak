@@ -70,6 +70,7 @@
             this.txtTexOffX = new System.Windows.Forms.TextBox();
             this.txtTex = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label17 = new System.Windows.Forms.Label();
             this.lblBoneChildCnt = new System.Windows.Forms.Label();
             this.lblBoneWeightCnt = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -89,7 +90,6 @@
             this.btnBoneAdd = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.txtNewBone = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -591,6 +591,15 @@
             this.tabPage3.Text = "ボーン";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(267, 199);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(221, 12);
+            this.label17.TabIndex = 47;
+            this.label17.Text = "※(あれば)子のウェイトはすべて親に渡されます";
+            // 
             // lblBoneChildCnt
             // 
             this.lblBoneChildCnt.Location = new System.Drawing.Point(430, 62);
@@ -687,19 +696,19 @@
             // rdoBoneDel
             // 
             this.rdoBoneDel.AutoSize = true;
-            this.rdoBoneDel.Location = new System.Drawing.Point(247, 172);
+            this.rdoBoneDel.Location = new System.Drawing.Point(247, 178);
             this.rdoBoneDel.Name = "rdoBoneDel";
-            this.rdoBoneDel.Size = new System.Drawing.Size(198, 16);
+            this.rdoBoneDel.Size = new System.Drawing.Size(231, 16);
             this.rdoBoneDel.TabIndex = 37;
             this.rdoBoneDel.TabStop = true;
-            this.rdoBoneDel.Text = "ボーン削除(子のいないボーンのみ可)";
+            this.rdoBoneDel.Text = "ボーン削除(子なし＆親にウェイト無しのもの)";
             this.rdoBoneDel.UseVisualStyleBackColor = true;
             this.rdoBoneDel.CheckedChanged += new System.EventHandler(this.EnableInputsBone);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(261, 123);
+            this.label12.Location = new System.Drawing.Point(261, 129);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(46, 12);
             this.label12.TabIndex = 33;
@@ -709,7 +718,7 @@
             // 
             this.rdoBoneAddChild.AutoSize = true;
             this.rdoBoneAddChild.Checked = true;
-            this.rdoBoneAddChild.Location = new System.Drawing.Point(247, 98);
+            this.rdoBoneAddChild.Location = new System.Drawing.Point(247, 104);
             this.rdoBoneAddChild.Name = "rdoBoneAddChild";
             this.rdoBoneAddChild.Size = new System.Drawing.Size(208, 16);
             this.rdoBoneAddChild.TabIndex = 30;
@@ -776,19 +785,10 @@
             // 
             // txtNewBone
             // 
-            this.txtNewBone.Location = new System.Drawing.Point(309, 120);
+            this.txtNewBone.Location = new System.Drawing.Point(309, 126);
             this.txtNewBone.Name = "txtNewBone";
             this.txtNewBone.Size = new System.Drawing.Size(179, 19);
             this.txtNewBone.TabIndex = 25;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(267, 193);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(199, 12);
-            this.label17.TabIndex = 47;
-            this.label17.Text = "※(あれば)ウェイトはすべて親に渡されます";
             // 
             // Form1
             // 

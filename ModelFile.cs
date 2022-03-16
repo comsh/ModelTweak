@@ -10,7 +10,7 @@ public class ModelFile {
 
     public SMR smr;
     public class SMR {          // UnityのSkinnedMeshRendererに相当
-        public TrList bones;
+        public List<Transform> bones;
         public Mesh mesh;
         public Material[] mate;
         public List<Morph> morph;   // いわゆる「シェイプキー」
@@ -55,14 +55,13 @@ public class ModelFile {
 
     public int ReadBones(BinaryReader br,SMR smr){
         int bn=br.ReadInt32();
-        var bones=smr.bones=new TrList();
-        for(int i=0; i<bn; i++) bones.Add(new Transform(br.ReadString(),br.ReadByte()));
+        var bones=smr.bones=new List<Transform>();
+        for(int i=0; i<bn; i++) bones.Add(new Transform(br.ReadString(),br.ReadByte(),i));
 
         for(int i=0; i<bn; i++){
             int p=br.ReadInt32();
             if(p<0) continue;
-            bones[i].parent=bones[p];
-            bones[p].children.Add(bones[i]);
+            (bones[i].parent=bones[p]).children.Add(bones[i]);
         }
         for(int i=0; i<bn; i++){
             bones[i].x=br.ReadSingle(); bones[i].y=br.ReadSingle(); bones[i].z=br.ReadSingle();
@@ -84,6 +83,7 @@ public class ModelFile {
         for(int i=0; i<bn; i++){
             bw.Write(bones[i].name);
             bw.Write(bones[i].hasScl);
+            bones[i].idx=i;
         }
         for(int i=0; i<bn; i++){
             if(bones[i].parent==null) bw.Write((int)-1);
@@ -128,22 +128,21 @@ public class ModelFile {
         }
         bw.Write("end");
     }
-    public class TrList:List<Transform> {
-        public new void Add(Transform tr){
-            tr.idx=this.Count;
-            base.Add(tr);
-        }
-    }
     public class Transform {
         public int idx;
         public string name;
         public byte hasScl; // _SCL_が追加で作られる
         public Transform parent;
         public List<Transform> children;
-        public float x; public float y; public float z;
-        public float qx; public float qy; public float qz; public float qw;
-        public bool hasScale;
-        public float scalex; public float scaley; public float scalez;
+        public float x=0; public float y=0; public float z=0;
+        public float qx=0; public float qy=0; public float qz=0; public float qw=1;
+        public bool hasScale=false;
+        public float scalex=1; public float scaley=1; public float scalez=1;
+        public Transform(string name,byte hasScl,int idx){
+            this.idx=idx;
+            this.name=name; this.hasScl=hasScl;
+            children=new List<Transform>();
+        }
         public Transform(string name,byte hasScl){
             this.name=name; this.hasScl=hasScl;
             children=new List<Transform>();

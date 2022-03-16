@@ -27,12 +27,13 @@ class Program {
             if(args[i][0]!='/') files.Add(args[i]);
             else if(args[i].Length!=2) return Usage();
             else{
-                if(args[i][1]=='O'){
+                char c=char.ToUpper(args[i][1]);
+                if(c=='O'){
                     if(i==args.Length-1) return Usage();
                     outfile=args[++i];
-                }else if(args[i][1]=='S' || args[i][1]=='T'){
+                }else if(c=='S' || c=='T'){
                     if(type!=' ') return NG("/Sと/Tの両方を指定することはできません");
-                    type=args[i][1];
+                    type=c;
                 }else return Usage();
             }
         }

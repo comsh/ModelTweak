@@ -38,17 +38,25 @@ namespace ModelTweak {
             }
 
             int i=0;
+            lstMorph.SuspendLayout();
+            lstMorph.Sorting=SortOrder.None; // 随時ソートを避け、後で並び替える。どちらが速いかはわからない
             lstMorph.Items.Clear();
             foreach(var mph in model.smr.morph) lstMorph.Items.Add(new LVItem(mph.name,mph,i++));
             width(lstMorph);
+            MorphListSort();
+            lstMorph.ResumeLayout();
 
+            lstTex.SuspendLayout();
             lstTex.Items.Clear();
             foreach(var mat in model.smr.mate) foreach(var prop in mat.props) if(prop.type==ModelFile.Prop.Type.Texture){
                 var tex=(ModelFile.PropTexture)prop.value;
                 lstTex.Items.Add(new LVItem(tex.name,new MateInfo(mat,prop)));
             }
             width(lstTex);
+            lstTex.ResumeLayout();
 
+            lstBone.SuspendLayout();
+            lstBone.Sorting=SortOrder.None;
             lstBone.Items.Clear();
             foreach(var bone in model.smr.bones){
                 var item=new LVItem(bone.name,bone);
@@ -61,7 +69,10 @@ namespace ModelTweak {
                     item.ForeColor=Color.DimGray;
                 }
             }
+            BoneListSort();
             width(lstBone);
+            lstBone.ResumeLayout();
+
             EnableInputs();
 
             void width(ListView lv){
@@ -329,8 +340,12 @@ namespace ModelTweak {
                     MessageBox.Show("ボーン名が空です", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
+                if(txtNewBone.Text.EndsWith("_SCL_",StringComparison.Ordinal)){
+                    MessageBox.Show("そのボーン名は使用できません", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
                 if(!CheckBoneName(txtNewBone.Text)){
-                    MessageBox.Show("その名前は使われています", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("そのボーン名は使われています", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
@@ -344,7 +359,12 @@ namespace ModelTweak {
                 model.AddBone(txtNewBone.Text,basebone.name);
                 weight(basebone.name,txtNewBone.Text);
             }else if(rdoBoneDel.Checked){ // ボーン削除
-                if(basebone.parent!=null) weight(basebone.name,basebone.parent.name);
+                if(basebone.parent!=null){
+                    if(basebone.parent.name.EndsWith("_SCL_",StringComparison.Ordinal))
+                        weight(basebone.name,basebone.parent.parent.name); // SCLの親は必ずあるはず
+                    else 
+                        weight(basebone.name,basebone.parent.name);
+                }
                 model.DelBone(basebone.name);
             }
             model.Write(ofile);
@@ -353,34 +373,30 @@ namespace ModelTweak {
                 var from=model.FindBone(name1);
                 if(from.meshIdx<0) return;
                 var to=model.FindBone(name2);
-                if(to.meshIdx<0) model.AddBoneToMesh(to);
-                // すぐ書き出して読み直すからシャローコピーでいい
-                mesh.bindpose[to.meshIdx]=mesh.bindpose[from.meshIdx];
+                if(to.meshIdx<0){
+                    model.AddBoneToMesh(to);
+                    // すぐ書き出して読み直すからシャローコピーでいい
+                    mesh.bindpose[to.meshIdx]=mesh.bindpose[from.meshIdx];
+                }
                 // ウェイト付け替え
                 foreach(var wt in mesh.weights)
                     for(int i=0; i<wt.index.Length; i++)
                         if(wt.index[i]==from.meshIdx && wt.weight[i]>0) wt.index[i]=(ushort)to.meshIdx;
             }
         }
-        private int CountWeight(string name){
-            var list=model.smr.mesh.bonelist;
-            for(int i=0; i<list.Count; i++) if(list[i]==name) return CountWeight(i);
-            return 0;
-        }
-        private int CountWeight(int idx){
+        private int CountWeight(string name,float tt=0f){
+            var b=model.FindBone(name);
+            if(b==null||b.meshIdx<0) return 0;
             int cnt=0;
             foreach(var wt in model.smr.mesh.weights)
-                for(int i=0; i<wt.index.Length; i++) if(wt.index[i]==idx && wt.weight[i]>0f){ cnt++; break; }
+                for(int i=0; i<wt.index.Length; i++) if(wt.index[i]==b.meshIdx && wt.weight[i]>tt){ cnt++; break; }
             return cnt;
         }
-        private bool AnyWeight(string name, float tt=0f){
-            var list=model.smr.mesh.bonelist;
-            for(int i=0; i<list.Count; i++) if(list[i]==name) return AnyWeight(i,tt);
-            return false;
-        }
-        private bool AnyWeight(int idx,float tt=0f){
+        private bool AnyWeight(string name,float tt=0f){
+            var b=model.FindBone(name);
+            if(b==null||b.meshIdx<0) return false;
             foreach(var wt in model.smr.mesh.weights)
-                for(int i=0; i<wt.index.Length; i++) if(wt.index[i]==idx && wt.weight[i]>tt){ return true; }
+                for(int i=0; i<wt.index.Length; i++) if(wt.index[i]==b.meshIdx && wt.weight[i]>tt){ return true; }
             return false;
         }
 
@@ -392,13 +408,14 @@ namespace ModelTweak {
                 txtBaseBone.Text=txtNewBone.Text=lblBoneSCL.Text="";
             }else{
                 btnBoneAdd.Enabled=chkBoneOW.Enabled=rdoBoneAddChild.Enabled=true;
-                rdoBoneDel.Enabled=(boneCCnt==0);
+                rdoBoneDel.Enabled=(boneCCnt==0 && !parentWAny);
                 txtNewBone.Enabled=rdoBoneAddChild.Checked;
             }
         }
 
         private int boneWCnt=0;
         private int boneCCnt=0;
+        private bool parentWAny=false;
         private void lstBone_SelectedIndexChanged(object sender,EventArgs e) {
             if(lstBone.SelectedItems.Count==0){
                 boneWCnt=boneCCnt=0;
@@ -408,6 +425,8 @@ namespace ModelTweak {
             var bone=GetBone(lstBone.SelectedItems[0]);
             boneWCnt=CountWeight(bone.name);
             boneCCnt=bone.children.Count;
+            parentWAny=false;
+            if(bone.parent!=null && AnyWeight(bone.parent.name)) parentWAny=true;
             if(bone.hasScl==1) lblBoneSCL.Text="[_SCL_有]"; else lblBoneSCL.Text="";
             lblBoneWeightCnt.Text=boneWCnt.ToString();
             lblBoneChildCnt.Text=boneCCnt.ToString();
@@ -455,6 +474,11 @@ namespace ModelTweak {
                 lstMorph.Sorting=SortOrder.None;
                 lstMorph.ListViewItemSorter=new LVItemComparer();
             }
+        }
+        private void MorphListSort(){
+            rdoMorphNoSort_CheckedChanged(null,null);
+            rdoMorphSortAsc_CheckedChanged(null,null);
+            rdoMorphSortDsc_CheckedChanged(null,null);
         }
         private void btnMorphReverse_Click(object sender,EventArgs e) {
             for(int i=0; i<lstMorph.Items.Count; i++)
@@ -506,6 +530,10 @@ namespace ModelTweak {
                 lstBone.ListViewItemSorter=new ChildBoneComparer();
             }
         }
-
+        private void BoneListSort(){
+            rdoBoneSortNormal_CheckedChanged(null,null);
+            rdoBoneSortWeight_CheckedChanged(null,null);
+            rdoBoneSortChild_CheckedChanged(null,null);
+        }
     }
 }
