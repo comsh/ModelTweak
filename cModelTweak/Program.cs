@@ -67,7 +67,7 @@ class Program {
         if(!File.Exists(namefile)) return NG("リストファイルが見つかりません");
         var model=new ModelFile(modelfile);
         var morph=model.smr.morph;
-        using(var r=new StreamReader(File.OpenRead(namefile))){
+        using(var r=new StreamReader(File.OpenRead(namefile),System.Text.Encoding.GetEncoding(932))){
             int line=0;
             while(r.Peek()>=0){
                 string name=r.ReadLine();
@@ -85,7 +85,7 @@ class Program {
         if(!File.Exists(modelfile)) return NG("modelファイルが見つかりません");
         if(!File.Exists(namefile)) return NG("リストファイルが見つかりません");
         var model=new ModelFile(modelfile);
-        using(var r=new StreamReader(File.OpenRead(namefile))){
+        using(var r=new StreamReader(File.OpenRead(namefile),System.Text.Encoding.GetEncoding(932))){
             var ti=new TexIter(model.smr.mate);
 
             int tcnt=0; // texファイル数を求めておく
