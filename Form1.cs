@@ -8,6 +8,9 @@ using System.Windows.Forms;
 namespace ModelTweak {
     public partial class Form1:Form {
         public Form1() { InitializeComponent(); }
+        private void Form1_Load(object sender,EventArgs e) {
+            cmbMorphLRType.DropDownStyle=ComboBoxStyle.DropDownList;
+        }
 
         private void btnFileSel_Click(object sender,EventArgs e) {
             string fname = fileDialog();
@@ -178,7 +181,7 @@ namespace ModelTweak {
             rdoMorphDel.Enabled=(n>0);
             rdoMorphLR.Enabled=rdoMorphRen.Enabled=(n==1);
             txtMorphNewName.Enabled=rdoMorphRen.Checked;
-            txtMorphRKey.Enabled=txtMorphLKey.Enabled=rdoMorphLR.Checked;
+            txtMorphRKey.Enabled=txtMorphLKey.Enabled=cmbMorphLRType.Enabled=rdoMorphLR.Checked;
             btnMorphExec.Enabled=chkMorphOW.Enabled=(n>0);
         }
         private void lstMorph_SelectedIndexChanged(object sender,EventArgs e) {
@@ -195,12 +198,22 @@ namespace ModelTweak {
         private ModelFile.Morph FilterMorph(ModelFile.Morph morph,Regex reg){
             var ret=new ModelFile.Morph();
             List<int> pick=new List<int>();
-            for(int i=0; i<morph.idx.Length; i++){
-                var bones=model.smr.mesh.weights[morph.idx[i]];
-                for(int j=0; j<bones.index.Length; j++){
-                    if(bones.weight[j]<0.01f) continue;
-                    string bonename=model.smr.mesh.bonelist[bones.index[j]];
-                    if(reg.Match(bonename).Success){ pick.Add(i); break; }
+            if(cmbMorphLRType.SelectedText=="ボーン"){
+                for(int i=0; i<morph.idx.Length; i++){
+                    var bones=model.smr.mesh.weights[morph.idx[i]];
+                    for(int j=0; j<bones.index.Length; j++){
+                        if(bones.weight[j]<0.01f) continue;
+                        string bonename=model.smr.mesh.bonelist[bones.index[j]];
+                        if(reg.Match(bonename).Success){ pick.Add(i); break; }
+                    }
+                }
+            }else{ // 座標
+                if(reg==leftBone){
+                    for(int i=0; i<morph.idx.Length; i++)
+                        if(model.smr.mesh.vertex[morph.idx[i]][0]<=0) pick.Add(i);
+                }else{
+                    for(int i=0; i<morph.idx.Length; i++)
+                        if(model.smr.mesh.vertex[morph.idx[i]][0]>0) pick.Add(i);
                 }
             }
             ret.idx=new ushort[pick.Count];
@@ -334,6 +347,7 @@ namespace ModelTweak {
             for(int i=0; i<lst.Count; i++) if(name==lst[i].name) return false;
             return true;
         }
+        private float x0,x1,y0,y1,z0,z1;
         private bool BoneValidate(){
             if(rdoBoneAddChild.Checked){
                 if(txtNewBone.Text==""){
@@ -348,6 +362,18 @@ namespace ModelTweak {
                     MessageBox.Show("そのボーン名は使われています", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
+                if( !float.TryParse(txNewBoneX0.Text,out x0) ||
+                    !float.TryParse(txNewBoneX1.Text,out x1) ||
+                    !float.TryParse(txNewBoneY0.Text,out y0) ||
+                    !float.TryParse(txNewBoneY1.Text,out y1) ||
+                    !float.TryParse(txNewBoneZ0.Text,out z0) ||
+                    !float.TryParse(txNewBoneZ1.Text,out z1) ){
+                    MessageBox.Show("数値が正しくありません", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                if(x0>x1){ float t=x0; x0=x1; x1=t; txNewBoneX0.Text=x0.ToString(); txNewBoneX1.Text=x1.ToString(); }
+                if(y0>y1){ float t=y0; y0=y1; y1=t; txNewBoneY0.Text=y0.ToString(); txNewBoneY1.Text=y1.ToString(); }
+                if(z0>z1){ float t=z0; z0=z1; z1=t; txNewBoneZ0.Text=z0.ToString(); txNewBoneZ1.Text=z1.ToString(); }
             }
             return true;
         }
@@ -357,19 +383,19 @@ namespace ModelTweak {
 
             if(rdoBoneAddChild.Checked){ // 子ボーン追加
                 model.AddBone(txtNewBone.Text,basebone.name);
-                weight(basebone.name,txtNewBone.Text);
+                weight(basebone.name,txtNewBone.Text,new float[]{x0,x1,y0,y1,z0,z1});
             }else if(rdoBoneDel.Checked){ // ボーン削除
                 if(basebone.parent!=null){
                     if(basebone.parent.name.EndsWith("_SCL_",StringComparison.Ordinal))
-                        weight(basebone.name,basebone.parent.parent.name); // SCLの親は必ずあるはず
+                        weight(basebone.name,basebone.parent.parent.name,null); // SCLの親は必ずあるはず
                     else 
-                        weight(basebone.name,basebone.parent.name);
+                        weight(basebone.name,basebone.parent.name,null);
                 }
                 model.DelBone(basebone.name);
             }
             model.Write(ofile);
 
-            void weight(string name1,string name2){
+            void weight(string name1,string name2,float[] range){
                 var from=model.FindBone(name1);
                 if(from.meshIdx<0) return;
                 var to=model.FindBone(name2);
@@ -379,9 +405,16 @@ namespace ModelTweak {
                     mesh.bindpose[to.meshIdx]=mesh.bindpose[from.meshIdx];
                 }
                 // ウェイト付け替え
-                foreach(var wt in mesh.weights)
-                    for(int i=0; i<wt.index.Length; i++)
-                        if(wt.index[i]==from.meshIdx && wt.weight[i]>0) wt.index[i]=(ushort)to.meshIdx;
+                for(int v=0; v<mesh.weights.Length; v++){
+                    var wt=mesh.weights[v];
+                    for(int i=0; i<wt.index.Length; i++) if(wt.index[i]==from.meshIdx && wt.weight[i]>0){
+                        if(range!=null){
+                            var p=mesh.W2L(v,from.meshIdx);
+                            if(p[0]<range[0]||p[0]>range[1] || p[1]<range[2]||p[1]>range[3] || p[2]<range[4]||p[2]>range[5]) continue;
+                        }
+                        wt.index[i]=(ushort)to.meshIdx;
+                    }
+                }
             }
         }
         private int CountWeight(string name,float tt=0f){
@@ -406,16 +439,17 @@ namespace ModelTweak {
                 btnBoneAdd.Enabled=chkBoneOW.Enabled=
                 rdoBoneAddChild.Enabled=rdoBoneDel.Enabled=txtNewBone.Enabled=false;
                 txtBaseBone.Text=txtNewBone.Text=lblBoneSCL.Text="";
+                txNewBoneX0.Enabled=txNewBoneX1.Enabled=txNewBoneY0.Enabled=txNewBoneY1.Enabled=txNewBoneZ0.Enabled=txNewBoneZ1.Enabled=false;
             }else{
                 btnBoneAdd.Enabled=chkBoneOW.Enabled=rdoBoneAddChild.Enabled=true;
-                rdoBoneDel.Enabled=(boneCCnt==0 && !parentWAny);
+                rdoBoneDel.Enabled=(boneCCnt==0);
                 txtNewBone.Enabled=rdoBoneAddChild.Checked;
+                txNewBoneX0.Enabled=txNewBoneX1.Enabled=txNewBoneY0.Enabled=txNewBoneY1.Enabled=txNewBoneZ0.Enabled=txNewBoneZ1.Enabled=rdoBoneAddChild.Checked;
             }
         }
 
         private int boneWCnt=0;
         private int boneCCnt=0;
-        private bool parentWAny=false;
         private void lstBone_SelectedIndexChanged(object sender,EventArgs e) {
             if(lstBone.SelectedItems.Count==0){
                 boneWCnt=boneCCnt=0;
@@ -425,8 +459,6 @@ namespace ModelTweak {
             var bone=GetBone(lstBone.SelectedItems[0]);
             boneWCnt=CountWeight(bone.name);
             boneCCnt=bone.children.Count;
-            parentWAny=false;
-            if(bone.parent!=null && AnyWeight(bone.parent.name)) parentWAny=true;
             if(bone.hasScl==1) lblBoneSCL.Text="[_SCL_有]"; else lblBoneSCL.Text="";
             lblBoneWeightCnt.Text=boneWCnt.ToString();
             lblBoneChildCnt.Text=boneCCnt.ToString();
@@ -500,6 +532,8 @@ namespace ModelTweak {
                 lstBone.Sorting=SortOrder.Ascending;
             }
         }
+
+
         private class BoldBoneComparer : IComparer {
             public int Compare(object a,object b){
                 var ia=(ListViewItem)a; var ib=(ListViewItem)b;

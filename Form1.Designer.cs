@@ -28,6 +28,8 @@
             this.btnFileSel = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label27 = new System.Windows.Forms.Label();
+            this.cmbMorphLRType = new System.Windows.Forms.ComboBox();
             this.chkMorphOW = new System.Windows.Forms.CheckBox();
             this.btnMorphReverse = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -70,6 +72,19 @@
             this.txtTexOffX = new System.Windows.Forms.TextBox();
             this.txtTex = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.txNewBoneZ1 = new System.Windows.Forms.TextBox();
+            this.txNewBoneZ0 = new System.Windows.Forms.TextBox();
+            this.txNewBoneY1 = new System.Windows.Forms.TextBox();
+            this.txNewBoneY0 = new System.Windows.Forms.TextBox();
+            this.txNewBoneX1 = new System.Windows.Forms.TextBox();
+            this.txNewBoneX0 = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.lblBoneChildCnt = new System.Windows.Forms.Label();
             this.lblBoneWeightCnt = new System.Windows.Forms.Label();
@@ -139,6 +154,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label27);
+            this.tabPage1.Controls.Add(this.cmbMorphLRType);
             this.tabPage1.Controls.Add(this.chkMorphOW);
             this.tabPage1.Controls.Add(this.btnMorphReverse);
             this.tabPage1.Controls.Add(this.panel1);
@@ -160,13 +177,35 @@
             this.tabPage1.Text = "シェイプキー";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(259, 125);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(53, 12);
+            this.label27.TabIndex = 19;
+            this.label27.Text = "分割方法";
+            // 
+            // cmbMorphLRType
+            // 
+            this.cmbMorphLRType.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.cmbMorphLRType.FormattingEnabled = true;
+            this.cmbMorphLRType.Items.AddRange(new object[] {
+            "座標",
+            "ボーン"});
+            this.cmbMorphLRType.Location = new System.Drawing.Point(328, 122);
+            this.cmbMorphLRType.Name = "cmbMorphLRType";
+            this.cmbMorphLRType.Size = new System.Drawing.Size(74, 20);
+            this.cmbMorphLRType.TabIndex = 9;
+            this.cmbMorphLRType.Text = "座標";
+            // 
             // chkMorphOW
             // 
             this.chkMorphOW.AutoSize = true;
             this.chkMorphOW.Location = new System.Drawing.Point(264, 330);
             this.chkMorphOW.Name = "chkMorphOW";
             this.chkMorphOW.Size = new System.Drawing.Size(81, 16);
-            this.chkMorphOW.TabIndex = 18;
+            this.chkMorphOW.TabIndex = 12;
             this.chkMorphOW.Text = "上書き保存";
             this.chkMorphOW.UseVisualStyleBackColor = true;
             // 
@@ -198,7 +237,7 @@
             this.rdoMorphNoSort.Location = new System.Drawing.Point(3, 3);
             this.rdoMorphNoSort.Name = "rdoMorphNoSort";
             this.rdoMorphNoSort.Size = new System.Drawing.Size(62, 16);
-            this.rdoMorphNoSort.TabIndex = 15;
+            this.rdoMorphNoSort.TabIndex = 14;
             this.rdoMorphNoSort.TabStop = true;
             this.rdoMorphNoSort.Text = "ソート無";
             this.rdoMorphNoSort.UseVisualStyleBackColor = true;
@@ -210,7 +249,7 @@
             this.rdoMorphSortDsc.Location = new System.Drawing.Point(124, 3);
             this.rdoMorphSortDsc.Name = "rdoMorphSortDsc";
             this.rdoMorphSortDsc.Size = new System.Drawing.Size(47, 16);
-            this.rdoMorphSortDsc.TabIndex = 14;
+            this.rdoMorphSortDsc.TabIndex = 16;
             this.rdoMorphSortDsc.Text = "降順";
             this.rdoMorphSortDsc.UseVisualStyleBackColor = true;
             this.rdoMorphSortDsc.CheckedChanged += new System.EventHandler(this.rdoMorphSortDsc_CheckedChanged);
@@ -221,7 +260,7 @@
             this.rdoMorphSortAsc.Location = new System.Drawing.Point(71, 3);
             this.rdoMorphSortAsc.Name = "rdoMorphSortAsc";
             this.rdoMorphSortAsc.Size = new System.Drawing.Size(47, 16);
-            this.rdoMorphSortAsc.TabIndex = 13;
+            this.rdoMorphSortAsc.TabIndex = 15;
             this.rdoMorphSortAsc.Text = "昇順";
             this.rdoMorphSortAsc.UseVisualStyleBackColor = true;
             this.rdoMorphSortAsc.CheckedChanged += new System.EventHandler(this.rdoMorphSortAsc_CheckedChanged);
@@ -247,15 +286,15 @@
             // 
             // txtMorphNewName
             // 
-            this.txtMorphNewName.Location = new System.Drawing.Point(314, 69);
+            this.txtMorphNewName.Location = new System.Drawing.Point(328, 55);
             this.txtMorphNewName.Name = "txtMorphNewName";
-            this.txtMorphNewName.Size = new System.Drawing.Size(180, 19);
+            this.txtMorphNewName.Size = new System.Drawing.Size(166, 19);
             this.txtMorphNewName.TabIndex = 7;
             // 
             // rdoMorphRen
             // 
             this.rdoMorphRen.AutoSize = true;
-            this.rdoMorphRen.Location = new System.Drawing.Point(245, 70);
+            this.rdoMorphRen.Location = new System.Drawing.Point(245, 56);
             this.rdoMorphRen.Name = "rdoMorphRen";
             this.rdoMorphRen.Size = new System.Drawing.Size(47, 16);
             this.rdoMorphRen.TabIndex = 6;
@@ -266,7 +305,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(259, 175);
+            this.label3.Location = new System.Drawing.Point(259, 181);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 12);
             this.label3.TabIndex = 7;
@@ -275,7 +314,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(259, 143);
+            this.label2.Location = new System.Drawing.Point(259, 154);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(49, 12);
             this.label2.TabIndex = 6;
@@ -283,22 +322,22 @@
             // 
             // txtMorphRKey
             // 
-            this.txtMorphRKey.Location = new System.Drawing.Point(314, 172);
+            this.txtMorphRKey.Location = new System.Drawing.Point(328, 178);
             this.txtMorphRKey.Name = "txtMorphRKey";
-            this.txtMorphRKey.Size = new System.Drawing.Size(180, 19);
-            this.txtMorphRKey.TabIndex = 10;
+            this.txtMorphRKey.Size = new System.Drawing.Size(166, 19);
+            this.txtMorphRKey.TabIndex = 11;
             // 
             // txtMorphLKey
             // 
-            this.txtMorphLKey.Location = new System.Drawing.Point(314, 140);
+            this.txtMorphLKey.Location = new System.Drawing.Point(328, 151);
             this.txtMorphLKey.Name = "txtMorphLKey";
-            this.txtMorphLKey.Size = new System.Drawing.Size(180, 19);
-            this.txtMorphLKey.TabIndex = 9;
+            this.txtMorphLKey.Size = new System.Drawing.Size(166, 19);
+            this.txtMorphLKey.TabIndex = 10;
             // 
             // rdoMorphLR
             // 
             this.rdoMorphLR.AutoSize = true;
-            this.rdoMorphLR.Location = new System.Drawing.Point(245, 113);
+            this.rdoMorphLR.Location = new System.Drawing.Point(245, 97);
             this.rdoMorphLR.Name = "rdoMorphLR";
             this.rdoMorphLR.Size = new System.Drawing.Size(80, 16);
             this.rdoMorphLR.TabIndex = 8;
@@ -310,7 +349,7 @@
             // 
             this.rdoMorphDel.AutoSize = true;
             this.rdoMorphDel.Checked = true;
-            this.rdoMorphDel.Location = new System.Drawing.Point(245, 25);
+            this.rdoMorphDel.Location = new System.Drawing.Point(245, 19);
             this.rdoMorphDel.Name = "rdoMorphDel";
             this.rdoMorphDel.Size = new System.Drawing.Size(47, 16);
             this.rdoMorphDel.TabIndex = 5;
@@ -324,7 +363,7 @@
             this.btnMorphExec.Location = new System.Drawing.Point(351, 326);
             this.btnMorphExec.Name = "btnMorphExec";
             this.btnMorphExec.Size = new System.Drawing.Size(143, 23);
-            this.btnMorphExec.TabIndex = 11;
+            this.btnMorphExec.TabIndex = 13;
             this.btnMorphExec.Text = "実行";
             this.btnMorphExec.UseVisualStyleBackColor = true;
             this.btnMorphExec.Click += new System.EventHandler(this.btnMorphExec_Click);
@@ -367,7 +406,7 @@
             this.chkTexOW.Location = new System.Drawing.Point(258, 330);
             this.chkTexOW.Name = "chkTexOW";
             this.chkTexOW.Size = new System.Drawing.Size(81, 16);
-            this.chkTexOW.TabIndex = 32;
+            this.chkTexOW.TabIndex = 25;
             this.chkTexOW.Text = "上書き保存";
             this.chkTexOW.UseVisualStyleBackColor = true;
             // 
@@ -489,7 +528,7 @@
             this.txtTexSclY.Location = new System.Drawing.Point(408, 173);
             this.txtTexSclY.Name = "txtTexSclY";
             this.txtTexSclY.Size = new System.Drawing.Size(68, 19);
-            this.txtTexSclY.TabIndex = 19;
+            this.txtTexSclY.TabIndex = 24;
             // 
             // label7
             // 
@@ -532,7 +571,7 @@
             this.btnTexExec.Location = new System.Drawing.Point(345, 326);
             this.btnTexExec.Name = "btnTexExec";
             this.btnTexExec.Size = new System.Drawing.Size(143, 23);
-            this.btnTexExec.TabIndex = 20;
+            this.btnTexExec.TabIndex = 26;
             this.btnTexExec.Text = "変更";
             this.btnTexExec.UseVisualStyleBackColor = true;
             this.btnTexExec.Click += new System.EventHandler(this.btnTexExec_Click);
@@ -542,31 +581,44 @@
             this.txtTexSclX.Location = new System.Drawing.Point(313, 173);
             this.txtTexSclX.Name = "txtTexSclX";
             this.txtTexSclX.Size = new System.Drawing.Size(68, 19);
-            this.txtTexSclX.TabIndex = 18;
+            this.txtTexSclX.TabIndex = 23;
             // 
             // txtTexOffY
             // 
             this.txtTexOffY.Location = new System.Drawing.Point(408, 144);
             this.txtTexOffY.Name = "txtTexOffY";
             this.txtTexOffY.Size = new System.Drawing.Size(68, 19);
-            this.txtTexOffY.TabIndex = 17;
+            this.txtTexOffY.TabIndex = 22;
             // 
             // txtTexOffX
             // 
             this.txtTexOffX.Location = new System.Drawing.Point(313, 144);
             this.txtTexOffX.Name = "txtTexOffX";
             this.txtTexOffX.Size = new System.Drawing.Size(68, 19);
-            this.txtTexOffX.TabIndex = 16;
+            this.txtTexOffX.TabIndex = 21;
             // 
             // txtTex
             // 
             this.txtTex.Location = new System.Drawing.Point(313, 112);
             this.txtTex.Name = "txtTex";
             this.txtTex.Size = new System.Drawing.Size(163, 19);
-            this.txtTex.TabIndex = 15;
+            this.txtTex.TabIndex = 20;
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label26);
+            this.tabPage3.Controls.Add(this.label25);
+            this.tabPage3.Controls.Add(this.label24);
+            this.tabPage3.Controls.Add(this.label23);
+            this.tabPage3.Controls.Add(this.label22);
+            this.tabPage3.Controls.Add(this.label19);
+            this.tabPage3.Controls.Add(this.label18);
+            this.tabPage3.Controls.Add(this.txNewBoneZ1);
+            this.tabPage3.Controls.Add(this.txNewBoneZ0);
+            this.tabPage3.Controls.Add(this.txNewBoneY1);
+            this.tabPage3.Controls.Add(this.txNewBoneY0);
+            this.tabPage3.Controls.Add(this.txNewBoneX1);
+            this.tabPage3.Controls.Add(this.txNewBoneX0);
             this.tabPage3.Controls.Add(this.label17);
             this.tabPage3.Controls.Add(this.lblBoneChildCnt);
             this.tabPage3.Controls.Add(this.lblBoneWeightCnt);
@@ -591,10 +643,127 @@
             this.tabPage3.Text = "ボーン";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(308, 204);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(12, 12);
+            this.label26.TabIndex = 60;
+            this.label26.Text = "Z";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(308, 179);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(12, 12);
+            this.label25.TabIndex = 59;
+            this.label25.Text = "Y";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(308, 154);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(12, 12);
+            this.label24.TabIndex = 58;
+            this.label24.Text = "X";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(261, 154);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(29, 12);
+            this.label23.TabIndex = 57;
+            this.label23.Text = "範囲";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(400, 204);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(17, 12);
+            this.label22.TabIndex = 56;
+            this.label22.Text = "～";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(400, 179);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(17, 12);
+            this.label19.TabIndex = 55;
+            this.label19.Text = "～";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(401, 154);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(17, 12);
+            this.label18.TabIndex = 54;
+            this.label18.Text = "～";
+            // 
+            // txNewBoneZ1
+            // 
+            this.txNewBoneZ1.Location = new System.Drawing.Point(423, 201);
+            this.txNewBoneZ1.Name = "txNewBoneZ1";
+            this.txNewBoneZ1.Size = new System.Drawing.Size(64, 19);
+            this.txNewBoneZ1.TabIndex = 38;
+            this.txNewBoneZ1.Text = "1000";
+            this.txNewBoneZ1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txNewBoneZ0
+            // 
+            this.txNewBoneZ0.Location = new System.Drawing.Point(331, 201);
+            this.txNewBoneZ0.Name = "txNewBoneZ0";
+            this.txNewBoneZ0.Size = new System.Drawing.Size(64, 19);
+            this.txNewBoneZ0.TabIndex = 37;
+            this.txNewBoneZ0.Text = "-1000";
+            this.txNewBoneZ0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txNewBoneY1
+            // 
+            this.txNewBoneY1.Location = new System.Drawing.Point(423, 176);
+            this.txNewBoneY1.Name = "txNewBoneY1";
+            this.txNewBoneY1.Size = new System.Drawing.Size(64, 19);
+            this.txNewBoneY1.TabIndex = 36;
+            this.txNewBoneY1.Text = "1000";
+            this.txNewBoneY1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txNewBoneY0
+            // 
+            this.txNewBoneY0.Location = new System.Drawing.Point(331, 176);
+            this.txNewBoneY0.Name = "txNewBoneY0";
+            this.txNewBoneY0.Size = new System.Drawing.Size(64, 19);
+            this.txNewBoneY0.TabIndex = 35;
+            this.txNewBoneY0.Text = "-1000";
+            this.txNewBoneY0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txNewBoneX1
+            // 
+            this.txNewBoneX1.Location = new System.Drawing.Point(424, 151);
+            this.txNewBoneX1.Name = "txNewBoneX1";
+            this.txNewBoneX1.Size = new System.Drawing.Size(64, 19);
+            this.txNewBoneX1.TabIndex = 34;
+            this.txNewBoneX1.Text = "1000";
+            this.txNewBoneX1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txNewBoneX0
+            // 
+            this.txNewBoneX0.Location = new System.Drawing.Point(331, 151);
+            this.txNewBoneX0.Name = "txNewBoneX0";
+            this.txNewBoneX0.Size = new System.Drawing.Size(64, 19);
+            this.txNewBoneX0.TabIndex = 33;
+            this.txNewBoneX0.Text = "-1000";
+            this.txNewBoneX0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(267, 199);
+            this.label17.Location = new System.Drawing.Point(267, 273);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(221, 12);
             this.label17.TabIndex = 47;
@@ -642,7 +811,7 @@
             this.chkBoneOW.Location = new System.Drawing.Point(258, 330);
             this.chkBoneOW.Name = "chkBoneOW";
             this.chkBoneOW.Size = new System.Drawing.Size(81, 16);
-            this.chkBoneOW.TabIndex = 39;
+            this.chkBoneOW.TabIndex = 40;
             this.chkBoneOW.Text = "上書き保存";
             this.chkBoneOW.UseVisualStyleBackColor = true;
             // 
@@ -662,7 +831,7 @@
             this.rdoBoneSortChild.Location = new System.Drawing.Point(147, 2);
             this.rdoBoneSortChild.Name = "rdoBoneSortChild";
             this.rdoBoneSortChild.Size = new System.Drawing.Size(80, 16);
-            this.rdoBoneSortChild.TabIndex = 2;
+            this.rdoBoneSortChild.TabIndex = 44;
             this.rdoBoneSortChild.TabStop = true;
             this.rdoBoneSortChild.Text = "子無し優先";
             this.rdoBoneSortChild.UseVisualStyleBackColor = true;
@@ -674,7 +843,7 @@
             this.rdoBoneSortWeight.Location = new System.Drawing.Point(51, 2);
             this.rdoBoneSortWeight.Name = "rdoBoneSortWeight";
             this.rdoBoneSortWeight.Size = new System.Drawing.Size(92, 16);
-            this.rdoBoneSortWeight.TabIndex = 1;
+            this.rdoBoneSortWeight.TabIndex = 43;
             this.rdoBoneSortWeight.TabStop = true;
             this.rdoBoneSortWeight.Text = "ウェイト持優先";
             this.rdoBoneSortWeight.UseVisualStyleBackColor = true;
@@ -687,7 +856,7 @@
             this.rdoBoneSortNormal.Location = new System.Drawing.Point(3, 2);
             this.rdoBoneSortNormal.Name = "rdoBoneSortNormal";
             this.rdoBoneSortNormal.Size = new System.Drawing.Size(47, 16);
-            this.rdoBoneSortNormal.TabIndex = 0;
+            this.rdoBoneSortNormal.TabIndex = 42;
             this.rdoBoneSortNormal.TabStop = true;
             this.rdoBoneSortNormal.Text = "通常";
             this.rdoBoneSortNormal.UseVisualStyleBackColor = true;
@@ -696,12 +865,12 @@
             // rdoBoneDel
             // 
             this.rdoBoneDel.AutoSize = true;
-            this.rdoBoneDel.Location = new System.Drawing.Point(247, 178);
+            this.rdoBoneDel.Location = new System.Drawing.Point(247, 252);
             this.rdoBoneDel.Name = "rdoBoneDel";
-            this.rdoBoneDel.Size = new System.Drawing.Size(231, 16);
-            this.rdoBoneDel.TabIndex = 37;
+            this.rdoBoneDel.Size = new System.Drawing.Size(175, 16);
+            this.rdoBoneDel.TabIndex = 39;
             this.rdoBoneDel.TabStop = true;
-            this.rdoBoneDel.Text = "ボーン削除(子なし＆親にウェイト無しのもの)";
+            this.rdoBoneDel.Text = "ボーン削除(子ボーン無しのもの)";
             this.rdoBoneDel.UseVisualStyleBackColor = true;
             this.rdoBoneDel.CheckedChanged += new System.EventHandler(this.EnableInputsBone);
             // 
@@ -720,10 +889,10 @@
             this.rdoBoneAddChild.Checked = true;
             this.rdoBoneAddChild.Location = new System.Drawing.Point(247, 104);
             this.rdoBoneAddChild.Name = "rdoBoneAddChild";
-            this.rdoBoneAddChild.Size = new System.Drawing.Size(208, 16);
-            this.rdoBoneAddChild.TabIndex = 30;
+            this.rdoBoneAddChild.Size = new System.Drawing.Size(179, 16);
+            this.rdoBoneAddChild.TabIndex = 31;
             this.rdoBoneAddChild.TabStop = true;
-            this.rdoBoneAddChild.Text = "子ボーンを追加してウェイトをすべて渡す";
+            this.rdoBoneAddChild.Text = "子ボーンを追加してウェイトを渡す";
             this.rdoBoneAddChild.UseVisualStyleBackColor = true;
             this.rdoBoneAddChild.CheckedChanged += new System.EventHandler(this.EnableInputsBone);
             // 
@@ -762,14 +931,14 @@
             this.txtBaseBone.Name = "txtBaseBone";
             this.txtBaseBone.ReadOnly = true;
             this.txtBaseBone.Size = new System.Drawing.Size(179, 19);
-            this.txtBaseBone.TabIndex = 24;
+            this.txtBaseBone.TabIndex = 30;
             // 
             // btnBoneAdd
             // 
             this.btnBoneAdd.Location = new System.Drawing.Point(345, 326);
             this.btnBoneAdd.Name = "btnBoneAdd";
             this.btnBoneAdd.Size = new System.Drawing.Size(143, 23);
-            this.btnBoneAdd.TabIndex = 27;
+            this.btnBoneAdd.TabIndex = 41;
             this.btnBoneAdd.Text = "実行";
             this.btnBoneAdd.UseVisualStyleBackColor = true;
             this.btnBoneAdd.Click += new System.EventHandler(this.btnBoneAdd_Click);
@@ -788,7 +957,7 @@
             this.txtNewBone.Location = new System.Drawing.Point(309, 126);
             this.txtNewBone.Name = "txtNewBone";
             this.txtNewBone.Size = new System.Drawing.Size(179, 19);
-            this.txtNewBone.TabIndex = 25;
+            this.txtNewBone.TabIndex = 32;
             // 
             // Form1
             // 
@@ -804,6 +973,7 @@
             this.MinimumSize = new System.Drawing.Size(540, 480);
             this.Name = "Form1";
             this.Text = "ModelTweak";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             this.tabControl1.ResumeLayout(false);
@@ -891,6 +1061,21 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox txNewBoneZ1;
+        private System.Windows.Forms.TextBox txNewBoneZ0;
+        private System.Windows.Forms.TextBox txNewBoneY1;
+        private System.Windows.Forms.TextBox txNewBoneY0;
+        private System.Windows.Forms.TextBox txNewBoneX1;
+        private System.Windows.Forms.TextBox txNewBoneX0;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.ComboBox cmbMorphLRType;
     }
 }
 
