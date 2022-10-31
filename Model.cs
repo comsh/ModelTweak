@@ -65,8 +65,8 @@ public class Model {
                 else if(w.index[i]>bone.meshIdx) w.index[i]--;  // 削除対象以降のウェイトの添字を１つ詰める
                 else{ w.index[i]=0; w.weight[i]=0; } // このツールではこのケースはない
 
-                // 本当は(汎用処理なら) weightを正規化かつweightの降順にソートしなきゃいけないけど、
-                // このツールではindexの付け替えしかやってないので、今のところは正規化等は不要
+                // 本当は weightを合計1.0に正規化かつweightの降順にソートしなきゃいけないけど、
+                // このツールの処理内容であれば、今のところは正規化等は不要
             }
             smr.mesh.bonelist.RemoveAt(bone.meshIdx);
             smr.mesh.bindpose.RemoveAt(bone.meshIdx);
@@ -115,6 +115,16 @@ public class Model {
         var mesh=smr.mesh;
         for(int i=0; i<mesh.bonelist.Count; i++)
             if(boneDic.TryGetValue(mesh.bonelist[i],out Bone b)) b.meshIdx=i;
+    }
+
+    public float[] W2L(int i,int b){
+        var v=smr.mesh.vertex[i];
+        var m=smr.mesh.bindpose[b];
+        return new float[]{
+            m[0]*v[0]+m[4]*v[1]+m[8]*v[2]+m[12],
+            m[1]*v[0]+m[5]*v[1]+m[9]*v[2]+m[13],
+            m[2]*v[0]+m[6]*v[1]+m[10]*v[2]+m[14]
+        };
     }
 }
 }
