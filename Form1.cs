@@ -480,6 +480,7 @@ namespace ModelTweak {
         private int[] submeshFilter=null;
         private int ParseSubMeshFilter(string txt){
             submeshFilter=null;
+            if(txt=="") return 0;
             int submeshcnt=model.smr.mesh.triangles.Length;
             var ret=new HashSet<int>();
             string[] sa=txt.Split(',');
@@ -497,7 +498,7 @@ namespace ModelTweak {
                     if(n<submeshcnt) ret.Add(n); else return -2;
                 }
             }
-            if(ret.Count==0) return 0; // 空ならnullのままにする
+            if(ret.Count==0) return 0;
             submeshFilter=new int[ret.Count];
             ret.CopyTo(submeshFilter);
             return 0;
